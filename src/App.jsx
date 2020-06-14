@@ -13,7 +13,7 @@ const MovieView = ({ movie, onClick }) => {
 };
 
 const MovieAdd = ({ onSubmit }) => {
-  const defaultTitle = null;
+  const defaultTitle = "";
   const defaultGenre = Movie.genres[0];
   const defaultRating = 5;
 
@@ -78,7 +78,7 @@ const MovieList = ({ movies, onClick }) => {
   return (
     <ul>
       {movies.map(movie => (
-        <li onClick={() => onClick(movie)}>
+        <li key={movie.title} onClick={() => onClick(movie)}>
           <MovieView key={movie.title} onClick={onClick} movie={movie} />
         </li>
       ))}
@@ -86,36 +86,17 @@ const MovieList = ({ movies, onClick }) => {
   );
 };
 
-const MovieAddPage = ({ movies, addMovie, removeMovie }) => {
-  return (
-    <div>
-      <MovieAdd onSubmit={addMovie} />
-      <h3>List of movies{movies.length ? ` (${movies.length})` : ""}:</h3>
-      <MovieList movies={movies} onClick={removeMovie} />
-    </div>
-  );
-};
-
 export default function App() {
   const [movies, setMovies] = useState([]);
 
   return (
-    <TabBar
-      pages={[
-        new Page(
-          "Add Movie",
-          (
-            <MovieAddPage
-              movies={movies}
-              addMovie={movie => setMovies(movies.concat(movie))}
-              removeMovie={movie =>
-                setMovies(movies.splice(movies.indexOf(movie), 1))
-              }
-            />
-          )
-        ),
-        new Page("Search Movie")
-      ]}
-    />
+    <div>
+      <MovieAdd onSubmit={movie => setMovies(movies.concat(movie))} />
+      <h3>List of movies{movies.length ? ` (${movies.length})` : ""}:</h3>
+      <MovieList
+        movies={movies}
+        onClick={movie => setMovies(movies.splice(movies.indexOf(movie), 1))}
+      />
+    </div>
   );
 }

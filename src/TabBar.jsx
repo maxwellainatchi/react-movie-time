@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 
-export class Page {
-  constructor(name, component) {
-    this.name = name;
-    this.component = component;
+export class Page extends React.Component {
+  constructor({ title, children }) {
+    super();
+    this.title = title;
+    this.children = children;
+  }
+
+  render() {
+    return <div>{this.children}</div>;
   }
 }
 
@@ -18,6 +23,7 @@ export default function TabBar({ pages }) {
       <nav style={{ marginBottom: "10px" }}>
         {pages.map(page => (
           <span
+            key={page.name}
             style={{
               border: "1px solid black",
               width: "max-content",
@@ -27,11 +33,11 @@ export default function TabBar({ pages }) {
             }}
             onClick={() => setPage(page)}
           >
-            {page.name}
+            {page.title}
           </span>
         ))}
       </nav>
-      {currentPage.component}
+      {currentPage}
     </div>
   );
 }
