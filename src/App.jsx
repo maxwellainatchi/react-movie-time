@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Rating from "./Rating";
 import Movie from "./models/Movie";
 import ConfirmButton from "./ConfirmButton";
+import Cookies from "js-cookie";
 import "./styles.css";
 
 const formStyle = { border: "2px solid black", padding: "5px" };
@@ -114,9 +115,23 @@ const MovieSearch = ({ onSubmit }) => {
   );
 };
 
+function tryParseCookie(name) {
+  const cookie = Cookies.get(name).trim();
+  if (!cookie) {
+    return;
+  }
+  try {
+    return JSON.parse(cookie);
+  } catch {}
+}
+
 export default function App() {
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState(tryParseCookie("movies") ?? []);
   const [searchedMovies, setSearchedMovies] = useState([]);
+
+  useEffect(() => {
+    Cookies.set("movies", JSON.stringify(movies));
+  }, [movies]);
 
   return (
     <div>
